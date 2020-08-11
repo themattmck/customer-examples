@@ -11,8 +11,7 @@ app.get('/async', async (req: Request, res: Response) => {
     })
 });
 
-app.get("/example",
-    async (req: Request, res: Response, next) => {
+app.get("/example", async (req: Request, res: Response, next) => {
         tracer.trace('req.getBasic', span => {
         })
         res.send({"Hello":"World"})
@@ -26,7 +25,8 @@ app.listen(3000,() => {
 
 
 async function listIsvs(): Promise<string> {
-    return await tracer.trace('async.trace', async () => {
+    return await tracer.trace('async.trace', async (span) => {
+        span?.addTags({"Key":"value"})
         return new Promise<string>((resolve, reject) => {
             setTimeout(function() {
                 resolve('hello world');
