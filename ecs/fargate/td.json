@@ -1,0 +1,58 @@
+[
+    {
+      "name":"<application_container_name>",
+      "image": "<application_image>",
+      "essential": true,
+      "portMappings": [
+          {
+              "containerPort": 8080
+          }
+      ],
+      "logConfiguration": {
+          "logDriver": "awsfirelens",
+          "options": {
+          "Name": "datadog",
+          "apikey": "<DD_API_KEY>",
+          "Host": "http-intake.logs.datadoghq.com",
+          "dd_service": "<DD_SERVICE_NAME>",
+          "dd_source": "<DD_LOGS_SOURCE>",
+          "dd_message_key": "log",
+          "TLS": "on",
+          "provider": "ecs"
+        }
+      }
+    },
+    {
+      "name": "datadog-agent",
+      "image": "datadog/agent:latest",
+      "essential": true,
+      "environment": [
+        {
+          "name": "DD_API_KEY",
+          "value": "<DD_API_KEY>"
+        },
+        {
+          "name": "ECS_FARGATE",
+          "value": "true"
+        },
+        {
+            "name": "DD_APM_ENABLED",
+           "value": "true"
+        }
+      ]
+    },
+    {
+      "essential": true,
+      "image": "amazon/aws-for-fluent-bit:latest",
+      "name": "log_router",
+      "firelensConfiguration": {
+        "type": "fluentbit",
+        "options": {
+          "enable-ecs-log-metadata": "true",
+          "config-file-type": "file",
+          "config-file-value": "/fluent-bit/configs/parse-json.conf"
+        }
+      }
+    }
+ ]
+ 
