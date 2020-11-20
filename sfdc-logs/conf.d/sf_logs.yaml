@@ -1,0 +1,8 @@
+instances:
+  - url: teststring
+    username: sfdc
+    password: testpass
+    api-key: <dd-api-key>
+    source: sfdc
+    service: sfdc-service
+    env: sfdcenv
